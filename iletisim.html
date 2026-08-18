@@ -38,7 +38,7 @@
   /* header */
   header{position:sticky;top:0;z-index:60;background:var(--ground);border-bottom:1px solid var(--line)}
   .bar{height:70px;display:flex;align-items:center;justify-content:space-between;gap:18px}
-  .brand{display:flex;align-items:baseline;gap:9px;font-weight:800;letter-spacing:.14em;font-size:16px;color:var(--bone)}
+  .brand{display:flex;align-items:baseline;gap:9px;font-weight:800;letter-spacing:.14em;font-size:16px;color:var(--bone);white-space:nowrap}
   .brand small{font-size:10px;letter-spacing:.34em;color:var(--grey);font-weight:600;align-self:center}
   .brand .sq{width:11px;height:11px;background:var(--bone);position:relative;align-self:center}
   .brand .sq::after{content:"";position:absolute;right:-5px;bottom:-5px;border:5px solid transparent;border-bottom-color:var(--red);border-right-color:var(--red)}
@@ -83,7 +83,9 @@
   .menu-foot{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:14px;padding-top:26px;border-top:1px solid var(--line)}
   .menu-social{display:flex;gap:10px}
   body.menu-open{overflow:hidden}
-  @media(max-width:920px){.actions .lbl{display:none}}
+  @media(max-width:920px){.actions .lbl{display:none;}header .actions>.ico{display:none}}
+  .menu-actions{display:flex;gap:12px;margin-top:26px}
+  @media(min-width:921px){.menu-actions{display:none}}
   .hnav ul{display:flex;gap:28px;list-style:none;font-size:13.5px;font-weight:500;letter-spacing:.02em}
   .hnav a{color:var(--grey);transition:color .18s}
   .hnav a:hover{color:var(--bone)}
@@ -265,7 +267,7 @@
     </ul></nav>
     <div class="actions">
       <a class="ico ig" href="https://www.instagram.com/mahmutsamibulbul/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" width="20" height="20"><use href="#ig"/></svg></a>
-      <button class="ico" id="themeBtn" aria-label="Tema değiştir"><svg viewBox="0 0 24 24" width="20" height="20"><use href="#sun"/></svg></button>
+      <button class="ico" id="themeBtn" data-theme-toggle aria-label="Tema değiştir"><svg viewBox="0 0 24 24" width="20" height="20"><use href="#sun"/></svg></button>
       <button class="burger" id="burger" aria-label="Menü" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </div>
@@ -279,6 +281,10 @@
       <a href="hakkimizda.html">Hakkımızda</a>
       <a href="iletisim.html" class="active">İletişim</a>
     </nav>
+    <div class="menu-actions">
+      <a class="ico ig" href="https://www.instagram.com/mahmutsamibulbul/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" width="20" height="20"><use href="#ig"/></svg></a>
+      <button class="ico" data-theme-toggle aria-label="Tema değiştir"><svg viewBox="0 0 24 24" width="20" height="20"><use href="#sun"/></svg></button>
+    </div>
   </div>
 </div>
 
@@ -327,11 +333,10 @@
 
 <script>
   (function(){
-    const btn=document.getElementById('themeBtn'),root=document.documentElement;
-    function icon(){btn.querySelector('use').setAttribute('href',root.getAttribute('data-theme')==='light'?'#moon':'#sun');}
-    icon();
-    btn.onclick=()=>{const t=root.getAttribute('data-theme')==='light'?'dark':'light';
-      root.setAttribute('data-theme',t);try{localStorage.setItem('msb-theme',t);}catch(e){}icon();};
+    const root=document.documentElement,tbtns=[...document.querySelectorAll('[data-theme-toggle]')];
+    function ico(){const m=root.getAttribute('data-theme')==='light'?'#moon':'#sun';tbtns.forEach(b=>b.querySelector('use').setAttribute('href',m));}
+    ico();
+    tbtns.forEach(b=>b.onclick=()=>{const t=root.getAttribute('data-theme')==='light'?'dark':'light';root.setAttribute('data-theme',t);try{localStorage.setItem('msb-theme',t);}catch(e){}ico();});
     const b=document.getElementById('burger'),m=document.getElementById('menu');
     function set(o){b.classList.toggle('open',o);m.classList.toggle('open',o);
       document.body.classList.toggle('menu-open',o);b.setAttribute('aria-expanded',o);m.setAttribute('aria-hidden',!o);}
